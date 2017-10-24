@@ -69,6 +69,15 @@ module Adzerk
       response
     end
 
+    def update_creative(data={}, image_path='')
+      response = RestClient.patch(@config[:host] + 'creative',
+                                 {:creative => camelize_data(data).to_json},
+                                 :X_Adzerk_ApiKey => @api_key,
+                                 :accept => :json)
+      response = upload_creative(JSON.parse(response)["Id"], image_path) unless image_path.empty?
+      response
+    end
+
     def upload_creative(id, image_path, size_override: false)
       image = File.new(image_path, 'rb')
       url = @config[:host] + 'creative/' + id.to_s + '/upload'
