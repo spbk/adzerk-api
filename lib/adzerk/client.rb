@@ -64,7 +64,8 @@ module Adzerk
       response = RestClient.post(@config[:host] + 'creative',
                                  {:creative => camelize_data(data).to_json},
                                   :X_Adzerk_ApiKey => @api_key,
-                                  :accept => :json)
+                                  :accept => :json,
+                                  timeout: 300)
       response = upload_creative(JSON.parse(response)["Id"], image_path) unless image_path.empty?
       response
     end
@@ -76,11 +77,12 @@ module Adzerk
       RestClient.post(url,
       {:image => image},
       "X-Adzerk-ApiKey" => @api_key,
-      :accept => :mime)
+      :accept => :mime,
+      timeout: 300)
     end
 
     def send_request(request, uri)
-      http = Net::HTTP.new(uri.host, uri.port)
+      http = Net::HTTP.new(uri.host, uri.port, :open_timeout => 300, :read_timeout => 300)
       http.use_ssl = uri.scheme == 'https'
       response = http.request(request)
       if response.kind_of? Net::HTTPClientError
