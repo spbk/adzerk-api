@@ -82,7 +82,9 @@ module Adzerk
     end
 
     def send_request(request, uri)
-      http = Net::HTTP.new(uri.host, uri.port, :open_timeout => 300, :read_timeout => 300)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.read_timeout = 300
+      http.open_timeout = 300
       http.use_ssl = uri.scheme == 'https'
       response = http.request(request)
       if response.kind_of? Net::HTTPClientError
