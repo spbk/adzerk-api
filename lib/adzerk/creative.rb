@@ -8,6 +8,11 @@ module Adzerk
       uncamelize_data(JSON.parse(response))
     end
 
+    def update(data= {}, imagepath='')
+      response = @client.update_creative(data, imagepath)
+      uncamelize_data(JSON.parse(response))
+    end
+
     def list(advertiserId)
       url = 'advertiser/' + advertiserId.to_s + "/creatives"
       parse_response(@client.get_request(url))
